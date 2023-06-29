@@ -14,7 +14,7 @@ class CrawlerController extends Controller
         $startDateTime = date_format(Carbon::now(),"Y/m/d/ H:i:s");
         $currentDateTime = date_format(Carbon::now(),"YmdHisu");
         $searchKeywordFileName = $currentDateTime.'_searchKeywords'.'.txt';
-        $searchResultFileName = $currentDateTime.'_情報収集(Google検索)'.'.xlsx';
+        $searchResultFileName = $currentDateTime.'_PRTIMES'.'.xlsx';
         foreach ($searchKeyWords as $searchKeyWord) {
             $textKeyWord .= $searchKeyWord .PHP_EOL;
         }

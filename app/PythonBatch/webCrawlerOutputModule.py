@@ -4,6 +4,7 @@
 import openpyxl
 from pathlib import Path
 import sys
+from copy import copy
 
 def OutputResultsToExcel(searchResultArray,searchResultFileName):    
     # get the current working directory
@@ -14,26 +15,62 @@ def OutputResultsToExcel(searchResultArray,searchResultFileName):
         base_path = Path(__file__).parent
         file_path = (base_path / "../../public/crawler_file").resolve() + "/"
 #    print(file_path)
-    templateFileName = "情報収集(Google検索).xlsx"
+    templateFileName = "PRTIMES.xlsx"
     wb = openpyxl.load_workbook(str(file_path) + templateFileName)
     sheet = wb.active
-    columns = ["C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF"
-]
+    columns = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N"]
     dataRow = len(list(sheet.rows))
+    keywordRow = 0
+    
     for searchResultContent in searchResultArray:
+        keywordRow = keywordRow + 1
+        if keywordRow > 1:
+            dataRow = dataRow + 1
+            srcCell = sheet["A1"]
+            dstCell = sheet["A" + str(dataRow)]
+            dstCell.font = copy(srcCell.font)
+            dstCell.alignment = copy(srcCell.alignment)
+            dstCell.border = copy(srcCell.border)
+            dstCell.fill = copy(srcCell.fill)
+            dstCell.value = searchResultContent["search_keywords"]
+            dataRow = dataRow + 1
+            srcCell = sheet["A2:N2"]
+            dstCell = sheet["A" + str(dataRow) + ":N"+str(dataRow)]
+            dstCell.font = copy(srcCell.font)
+            dstCell.alignment = copy(srcCell.alignment)
+            dstCell.border = copy(srcCell.border)
+            dstCell.fill = copy(srcCell.fill)
+            dstCell.value = srcCell.value
+
         dataRow = dataRow + 1
-        c= sheet["A"+str(dataRow)]
-        c.value = str(dataRow-1)
-        c= sheet["B"+str(dataRow)]
-        c.value = searchResultContent["search_keywords"]
-        j=0
         for searchResult in searchResultContent["search_results"]:
-            c = sheet[columns[j*3]+str(dataRow)]
-            c.value = searchResult['title']
-            c = sheet[columns[j*3+1]+str(dataRow)]
-            c.value = searchResult['url']
-            c = sheet[columns[j*3+2]+str(dataRow)]
-            c.value = searchResult['meta']
-            j=j+1
+            c = sheet[columns[0]+str(dataRow)]
+            c.value = searchResult['no']
+            c = sheet[columns[1]+str(dataRow)]
+            c.value = searchResult['industry']
+            c = sheet[columns[2]+str(dataRow)]
+            c.value = searchResult['company_name']
+            c = sheet[columns[3]+str(dataRow)]
+            c.value = searchResult['company_homepage_url']
+            c = sheet[columns[4]+str(dataRow)]
+            c.value = searchResult['listing']
+            c = sheet[columns[5]+str(dataRow)]
+            c.value = searchResult['capital']
+            c = sheet[columns[6]+str(dataRow)]
+            c.value = searchResult['date_of_establishment']
+            c = sheet[columns[7]+str(dataRow)]
+            c.value = searchResult['article_title']
+            c = sheet[columns[8]+str(dataRow)]
+            c.value = searchResult['release_date']
+            c = sheet[columns[9]+str(dataRow)]
+            c.value = searchResult['url_of_the_product_service_described_in_the_article']
+            c = sheet[columns[10]+str(dataRow)]
+            c.value = searchResult['business_category']
+            c = sheet[columns[11]+str(dataRow)]
+            c.value = searchResult['kw_displayed_at_the_bottom_of_the_article']
+            c = sheet[columns[12]+str(dataRow)]
+            c.value = searchResult['prtimes_url']
+            c = sheet[columns[13]+str(dataRow)]
+            c.value = searchResult['release_time']
     searchResultFilePath = file_path + searchResultFileName
     wb.save(searchResultFilePath)

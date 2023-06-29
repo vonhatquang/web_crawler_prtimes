@@ -71,7 +71,7 @@ def getElementByCssSelector(parent,cssSelector):
     except NoSuchElementException:
         return None
     
-def getElementsByCssSelector(parent,cssSelector):
+def getElementsByCssSelectors(parent,cssSelector):
     try:
         return parent.find_elements(By.CSS_SELECTOR,cssSelector)
     except NoSuchElementException:
