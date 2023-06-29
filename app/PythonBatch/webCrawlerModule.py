@@ -17,7 +17,6 @@ def crawlerDataURL(driver, content):
     recordCount =  webElementModule.getElementByCssSelector(driver,'div.search-keyword-content__result').text.replace("件","")
     
     recordPage = int(int(recordCount)/40)
-    recordPage = 1
     recordRun = 0
     for i in range(recordPage):  
         driver.get("https://prtimes.jp/main/action.php?run=html&page=searchkey&search_word="+content+"&pagenum=" + str(i)) 
