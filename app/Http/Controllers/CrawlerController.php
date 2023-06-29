@@ -31,7 +31,7 @@ class CrawlerController extends Controller
             $directorySlash = "/";
         }
         $command = escapeshellcmd('python ' . app_path() .$crawlerDataBatch .' '.$currentDateTime.' '.public_path('crawler_file'.$directorySlash));
-        dd($command);
+        // dd($command);
         //Run Python Script for Crawler Data
         $output = shell_exec($command);
         //Convert Return from Python to Search Results File Name
