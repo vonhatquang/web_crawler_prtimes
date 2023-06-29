@@ -8,12 +8,12 @@ from copy import copy
 
 def OutputResultsToExcel(searchResultArray,searchResultFileName):    
     # get the current working directory
-    file_path = ""
-    if sys.platform.startswith('win'):
-        file_path = str(sys.argv[2])
-    else:
-        base_path = Path(__file__).parent
-        file_path = (base_path / "../../public/crawler_file").resolve() + "/"
+    file_path = str(sys.argv[2])
+    # if sys.platform.startswith('win'):
+    #     file_path = str(sys.argv[2])
+    # else:
+    #     base_path = Path(__file__).parent
+    #     file_path = (base_path / "../../public/crawler_file").resolve() + "/"
     templateFileName = "PRTIMES.xlsx"
     wb = openpyxl.load_workbook(str(file_path) + templateFileName)
     columns = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N"]
