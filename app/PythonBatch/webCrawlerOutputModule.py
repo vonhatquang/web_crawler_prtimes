@@ -14,7 +14,6 @@ def OutputResultsToExcel(searchResultArray,searchResultFileName):
     else:
         base_path = Path(__file__).parent
         file_path = (base_path / "../../public/crawler_file").resolve() + "/"
-#    print(file_path)
     templateFileName = "PRTIMES.xlsx"
     wb = openpyxl.load_workbook(str(file_path) + templateFileName)
     sheet = wb.active
@@ -25,22 +24,43 @@ def OutputResultsToExcel(searchResultArray,searchResultFileName):
     for searchResultContent in searchResultArray:
         keywordRow = keywordRow + 1
         if keywordRow > 1:
-            dataRow = dataRow + 1
-            srcCell = sheet["A1"]
+            #dataRow = dataRow + 1
             dstCell = sheet["A" + str(dataRow)]
-            dstCell.font = copy(srcCell.font)
-            dstCell.alignment = copy(srcCell.alignment)
-            dstCell.border = copy(srcCell.border)
-            dstCell.fill = copy(srcCell.fill)
-            dstCell.value = searchResultContent["search_keywords"]
+            dstCell.value = "KW"
+            dstCell = sheet["B" + str(dataRow)]
+            dstCell.value = searchResultContent["search_keywords"]  
             dataRow = dataRow + 1
-            srcCell = sheet["A2:N2"]
-            dstCell = sheet["A" + str(dataRow) + ":N"+str(dataRow)]
-            dstCell.font = copy(srcCell.font)
-            dstCell.alignment = copy(srcCell.alignment)
-            dstCell.border = copy(srcCell.border)
-            dstCell.fill = copy(srcCell.fill)
-            dstCell.value = srcCell.value
+            dstCell = sheet[columns[0]+str(dataRow)]
+            dstCell.value = "No."
+            dstCell = sheet[columns[1]+str(dataRow)]
+            dstCell.value = "業種"
+            dstCell = sheet[columns[2]+str(dataRow)]
+            dstCell.value = "企業名"
+            dstCell = sheet[columns[3]+str(dataRow)]
+            dstCell.value = "企業ホームページURL"
+            dstCell = sheet[columns[4]+str(dataRow)]
+            dstCell.value = "上場"
+            dstCell = sheet[columns[5]+str(dataRow)]
+            dstCell.value = "資本金"
+            dstCell = sheet[columns[6]+str(dataRow)]
+            dstCell.value = "設立日"
+            dstCell = sheet[columns[7]+str(dataRow)]
+            dstCell.value = "記事タイトル"
+            dstCell = sheet[columns[8]+str(dataRow)]
+            dstCell.value = "公開日"
+            dstCell = sheet[columns[9]+str(dataRow)]
+            dstCell.value = "記事内に記載された商品・サービスのURL"
+            dstCell = sheet[columns[10]+str(dataRow)]
+            dstCell.value = "ビジネスカテゴリ"
+            dstCell = sheet[columns[11]+str(dataRow)]
+            dstCell.value = "記事最下部に表示されているKW"
+            dstCell = sheet[columns[12]+str(dataRow)]
+            dstCell.value = "PRTIMESのURL"
+            dstCell = sheet[columns[13]+str(dataRow)]
+            dstCell.value = "RELEASE TIME"
+        else:            
+            dstCell = sheet["B" + str(dataRow-1)]
+            dstCell.value = searchResultContent["search_keywords"]
 
         dataRow = dataRow + 1
         for searchResult in searchResultContent["search_results"]:
@@ -72,5 +92,6 @@ def OutputResultsToExcel(searchResultArray,searchResultFileName):
             c.value = searchResult['prtimes_url']
             c = sheet[columns[13]+str(dataRow)]
             c.value = searchResult['release_time']
+            dataRow = dataRow + 1
     searchResultFilePath = file_path + searchResultFileName
     wb.save(searchResultFilePath)

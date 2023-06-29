@@ -11,92 +11,112 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 import datetime
 
-#Crawler Data Start
-def crawlerData(driver, content):
+def crawlerDataURL(driver, content):
     searchResults = []
-    #/html/body/main/section/div/div[3]/ul/li[3]/button
     webElementModule.getElementByCssSelector(driver,'button.list-article-display-change__button--text').click()
     recordCount =  webElementModule.getElementByCssSelector(driver,'div.search-keyword-content__result').text.replace("件","")
-    recordPage = (int(recordCount)+39)/40
+    
+    recordPage = int(int(recordCount)/40)
+    recordPage = 1
     recordRun = 0
-    for i in range(1, recordPage):        
-        driver.get("https://prtimes.jp/main/action.php?run=html&page=searchkey&search_word="+content+"&pagenum=" + str(i))
-        articleLinks = webElementModule.getElementsByCssSelectors(driver,'article.list-article')
+    for i in range(recordPage):  
+        driver.get("https://prtimes.jp/main/action.php?run=html&page=searchkey&search_word="+content+"&pagenum=" + str(i)) 
+        articleLinks = webElementModule.getElementsByCssSelectors(driver,'article.list-article >a')   
         for articleLink in articleLinks:
             prtimes_url = articleLink.get_attribute('href')
-            no = recordRun + 1
-            driver.get(prtimes_url)
-            article_title = webElementModule.getElementByCssSelector(driver,'h1.release--title').text
-            release_date = webElementModule.getElementByCssSelector(driver,'time.time.icon-time-release-svn').text
-            release_date_pos = release_date.find("日")
-            release_time = webElementModule.getElementByCssSelector(driver,'time.time.icon-time-release-svn').get_attribute("datetime")
-            aside = webElementModule.getElementByCssSelector(driver,'aside.sidebar-release')
-            company_name = webElementModule.getElementByCssSelector(aside,'div.company-name').text
-            containerInformationCompany = webElementModule.getElementByCssSelector(driver,'#containerInformationCompany')
-            containerInformationCompanyLis = webElementModule.getElementsByCssSelectors(containerInformationCompany,'li')
-            containerInformationCompanyLiRun = 0
-            company_homepage_url = ""
-            industry = ""
-            listing = ""
-            capital = ""
-            date_of_establishment = ""
-            url_of_the_product_service_described_in_the_article = ""
-            for containerInformationCompanyLi in containerInformationCompanyLis:
-                containerInformationCompanyLiRun = containerInformationCompanyLiRun +1
-                bodyInformation = webElementModule.getElementByCssSelector(containerInformationCompanyLi,'span.body-information').text
-                if containerInformationCompanyLiRun == 1:
-                        company_homepage_url = bodyInformation
-                elif containerInformationCompanyLiRun == 2:
-                        industry = bodyInformation
-                elif containerInformationCompanyLiRun == 6:
-                        listing = bodyInformation
-                elif containerInformationCompanyLiRun == 7:
-                        capital = bodyInformation
-                elif containerInformationCompanyLiRun == 8:
-                        date_of_establishment = bodyInformation
-            rbody = webElementModule.getElementByCssSelector(driver,'div.rbody')
-            if len(rbody) <=0:
-                rbody = webElementModule.getElementByCssSelector(driver,'div.r-text')
-                rtextas = webElementModule.getElementsByCssSelectors(rbody,'a')
-                for rtexta in rtextas:
-                    if url_of_the_product_service_described_in_the_article == "":
-                        url_of_the_product_service_described_in_the_article = rtexta.getAttribute("href")
-                    else:                        
-                        url_of_the_product_service_described_in_the_article = url_of_the_product_service_described_in_the_article + "\n" + rtexta.getAttribute("href")
-            article = webElementModule.getElementByCssSelector(driver,'article')
-            entry_info_renew = webElementModule.getElementByCssSelector(article,'dl.entry-info-renew')
-            dts = webElementModule.getElementsByCssSelectors(entry_info_renew,'dt')
-            dds = webElementModule.getElementsByCssSelectors(entry_info_renew,'dd')
-            ddRun = 0
-            business_category = ""
-            kw_displayed_at_the_bottom_of_the_article = ""
-            for dt in dts:
-                ddRun = ddRun+1
-                dtText = dt.text
-                if dtText == "ビジネスカテゴリ":
-                     if business_category == "":
-                        business_category = dds[ddRun].text
-                     else:
-                        business_category = business_category + "\n" + dds[ddRun].text                          
-                elif dtText == "キーワード":
-                     kw_displayed_at_the_bottom_of_the_article =dds[ddRun].text
-
+            recordRun = recordRun + 1
+            no = recordRun
+            
             searchResults.append({
                 'no':no,
-                'industry':industry,
-                'company_name':company_name,
-                'company_homepage_url':company_homepage_url,
-                'listing':listing,
-                'capital':capital,
-                'date_of_establishment':date_of_establishment,
-                'article_title':article_title,
-                'release_date':release_date[release_date_pos + 1: len(release_date)] ,
-                'url_of_the_product_service_described_in_the_article':url_of_the_product_service_described_in_the_article,
-                'business_category':business_category,
-                'kw_displayed_at_the_bottom_of_the_article':kw_displayed_at_the_bottom_of_the_article,
+                'industry':"",
+                'company_name':"",
+                'company_homepage_url':"",
+                'listing':"",
+                'capital':"",
+                'date_of_establishment':"",
+                'article_title':"",
+                'release_date':"" ,
+                'url_of_the_product_service_described_in_the_article':"",
+                'business_category':"",
+                'kw_displayed_at_the_bottom_of_the_article':"",
                 'prtimes_url':prtimes_url,
-                'release_time':release_time
+                'release_time':""
             })             
+    return searchResults
+
+def crawlerDataURLDetail(driver, searchResults):
+    for searchResult in searchResults:
+        driver.get(str(searchResult["prtimes_url"]))
+        article_title = webElementModule.getElementByCssSelector(driver,'h1.release--title').text
+        release_date = webElementModule.getElementByCssSelector(driver,'time.time.icon-time-release-svn').text
+        release_date_pos = release_date.find("日")
+        release_time = webElementModule.getElementByCssSelector(driver,'time.time.icon-time-release-svn').get_attribute("datetime")
+        aside = webElementModule.getElementByCssSelector(driver,'aside.sidebar-release')
+        company_name = webElementModule.getElementByCssSelector(aside,'div.company-name').text
+        containerInformationCompany = webElementModule.getElementByCssSelector(driver,'#containerInformationCompany')
+        containerInformationCompanyLis = webElementModule.getElementsByCssSelectors(containerInformationCompany,'li')
+        containerInformationCompanyLiRun = 0
+        company_homepage_url = ""
+        industry = ""
+        listing = ""
+        capital = ""
+        date_of_establishment = ""
+        url_of_the_product_service_described_in_the_article = ""
+        for containerInformationCompanyLi in containerInformationCompanyLis:
+            containerInformationCompanyLiRun = containerInformationCompanyLiRun +1
+            bodyInformation = webElementModule.getElementByCssSelector(containerInformationCompanyLi,'span.body-information').text
+            if containerInformationCompanyLiRun == 1:
+                company_homepage_url = bodyInformation
+            elif containerInformationCompanyLiRun == 2:
+                industry = bodyInformation
+            elif containerInformationCompanyLiRun == 6:
+                listing = bodyInformation
+            elif containerInformationCompanyLiRun == 7:
+                capital = bodyInformation
+            elif containerInformationCompanyLiRun == 8:
+                date_of_establishment = bodyInformation
+        rtext = webElementModule.getElementByCssSelector(driver,'div.r-text')
+        rtextas = webElementModule.getElementsByCssSelectors(rtext,'a')
+        for rtexta in rtextas:
+            if url_of_the_product_service_described_in_the_article == "":
+                url_of_the_product_service_described_in_the_article = rtexta.get_attribute("href")
+            else:                        
+                url_of_the_product_service_described_in_the_article = url_of_the_product_service_described_in_the_article + "\n" + rtexta.get_attribute("href")
+        article = webElementModule.getElementByCssSelector(driver,'article')
+        entry_info_renew = webElementModule.getElementByCssSelector(article,'dl.entry-info-renew')
+        dts = webElementModule.getElementsByCssSelectors(entry_info_renew,'dt')
+        dds = webElementModule.getElementsByCssSelectors(entry_info_renew,'dd')
+        ddRun = -1
+        business_category = ""
+        kw_displayed_at_the_bottom_of_the_article = ""
+        for dt in dts:
+            ddRun = ddRun+1
+            dtText = dt.text
+            if dtText == "ビジネスカテゴリ":
+                if business_category == "":
+                    business_category = dds[ddRun].text
+                else:
+                    business_category = business_category + "\n" + dds[ddRun].text                          
+            elif dtText == "キーワード":
+                kw_displayed_at_the_bottom_of_the_article =dds[ddRun].text
+        searchResult['industry']=industry
+        searchResult['company_name']=company_name
+        searchResult['company_homepage_url']=company_homepage_url
+        searchResult['listing']=listing
+        searchResult['capital']=capital
+        searchResult['date_of_establishment']=date_of_establishment
+        searchResult['article_title']=article_title
+        searchResult['release_date']=release_date[release_date_pos + 1: len(release_date)] 
+        searchResult['url_of_the_product_service_described_in_the_article']=url_of_the_product_service_described_in_the_article
+        searchResult['business_category']=business_category
+        searchResult['kw_displayed_at_the_bottom_of_the_article']=kw_displayed_at_the_bottom_of_the_article
+        searchResult['release_time']=release_time
+    return searchResults
+#Crawler Data Start
+def crawlerData(driver, content):
+    searchResults = crawlerDataURL(driver, content)
+    searchResults = crawlerDataURLDetail(driver, searchResults)      
     return searchResults
 
 def webCrawlerDataProcess():   
