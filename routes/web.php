@@ -14,8 +14,9 @@ use App\Http\Controllers\CrawlerController;
 |
 */
 
-Route::get('/', function () {
-    return view('crawlerData');
-});
+// Route::get('/', function () {
+//     return view('crawlerData');
+// });
 
+Route::get('/', [CrawlerController::class, 'index'])->name('crawler');
 Route::post('/crawlerData',[CrawlerController::class,'crawlerProcess'])->name('crawler.process');

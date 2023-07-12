@@ -49,7 +49,9 @@
         </div> 
         <div class="row justify-content-center">
             <div class="col-6 container" style="margin-top:10px !important">
-                <input type="button" value="クリア" id="cancel" class="btn btn-secondary">  
+                <input type="button" value="クリア" id="cancel" class="btn btn-secondary"> 
+                <input type="hidden" value="<?php echo $processLogPath?>" id="processLogPath"> 
+                
                 <input type="button" value="Webスクレイピング実行" id="crawler-btn" class="btn btn-primary">      
             </div> 
         </div> 
