@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CrawlerController;
+use App\Http\Controllers\RedeliveriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +15,37 @@ use App\Http\Controllers\CrawlerController;
 */
 
 // Route::get('/', function () {
-//     return view('crawlerData');
+//     return view('welcome');
+//     //return view('redeliveries');
+//     //return view('login');
+// });
+Route::redirect('/', 'login');
+
+// Route::get('/redeliveries', function () {
+//     // return view('welcome');
+//     //return view('redeliveries');
+//     return view('redeliveries');
 // });
 
-Route::get('/', [CrawlerController::class, 'index'])->name('crawler');
+Route::get('crawler', [CrawlerController::class, 'index'])->name('crawler');
+Route::post('/crawlerLog',[CrawlerProcessController::class,'getProcessLog'])->name('crawler.log');
 Route::post('/crawlerData',[CrawlerController::class,'crawlerProcess'])->name('crawler.process');
+
+Route::get('redeliveries', [RedeliveriesController::class, 'index'])->name('redeliveries');
+Route::post('list-redeliveries', [RedeliveriesController::class, 'listRedeliveries'])->name('redeliveries.list'); 
+Route::post('get-redeliveries', [RedeliveriesController::class, 'getRedeliveries'])->name('redeliveries.get'); 
+Route::post('post-redeliveries', [RedeliveriesController::class, 'postRedeliveries'])->name('redeliveries.post');
+Route::get('redeliveries/{id}', [RedeliveriesController::class, 'editQRRedeliveries']);
+Route::post('update-qr-redeliveries', [RedeliveriesController::class, 'updateQRRedeliveries'])->name('redeliveries.updateQR');
+Route::post('update-redeliveries', [RedeliveriesController::class, 'updateRedeliveries'])->name('redeliveries.update');
+Route::post('delete-redeliveries', [RedeliveriesController::class, 'deleteRedeliveries'])->name('redeliveries.delete');
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
