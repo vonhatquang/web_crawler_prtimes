@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
@@ -8,10 +10,13 @@ use Carbon\Carbon;
 class CrawlerController extends Controller
 {
     public function index(){
-        $processLogPath =  public_path('crawler_file/processLog.txt');
-        return view('crawler')->with(compact('processLogPath'));
+        if(Auth::check()){
+            // $redeliveries = Redeliveries::orderBy('delivery_date','asc')->get();
+            // return view('redeliveries')->with(compact('redeliveries'));
+            return view('crawler');
+        }
+        return redirect("login");
     }
-
     function crawlerProcess(Request $request){
         //Write Selected Search Keywords to file for Python Script
         $searchKeyWords = json_decode($request->searchKeyword,true);
@@ -19,7 +24,7 @@ class CrawlerController extends Controller
         $startDateTime = date_format(Carbon::now(),"Y/m/d/ H:i:s");
         $currentDateTime = date_format(Carbon::now(),"YmdHisu");
         $searchKeywordFileName = $currentDateTime.'_searchKeywords'.'.txt';
-        $searchResultFileName = $currentDateTime.'_PRTIMES'.'.xlsx';
+        $searchResultFileName = $currentDateTime.'_情報収集(Google検索)'.'.xlsx';
         foreach ($searchKeyWords as $searchKeyWord) {
             $textKeyWord .= $searchKeyWord .PHP_EOL;
         }
@@ -36,7 +41,7 @@ class CrawlerController extends Controller
             $directorySlash = "/";
         }
         $command = escapeshellcmd('python ' . app_path() .$crawlerDataBatch .' '.$currentDateTime.' '.public_path('crawler_file'.$directorySlash));
-        dd($command);
+        // dd($command);
         //Run Python Script for Crawler Data
         $output = shell_exec($command);
         //Convert Return from Python to Search Results File Name
@@ -46,10 +51,8 @@ class CrawlerController extends Controller
             return response("");
         }
         $endDateTime = date_format(Carbon::now(),"Y/m/d/ H:i:s");
-        $processSecond = strtotime($endDateTime) - strtotime($startDateTime);
         $downloadFilePath = public_path('crawler_file'.$directorySlash.$searchResultFileName);
-        $responseArray= array('SearchKeywordsNum' => count($searchKeyWords),'SearchItemsNum' => str_replace("\n","",$output),'ProcessSecond' => $processSecond,'StartDate' => $startDateTime, 'EndDate' => $endDateTime,'DownloadFile' => $downloadFilePath);
-        //dd($responseArray);
+        $responseArray= array('SearchKeywordsNum' => count($searchKeyWords),'StartDate' => $startDateTime, 'EndDate' => $endDateTime,'DownloadFile' => $downloadFilePath);
         return response(json_encode($responseArray));
     }
 }

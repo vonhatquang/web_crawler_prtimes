@@ -17,8 +17,6 @@ $(document).ready(function() {
         // } else {
 
         // }
-        alert(window.location.pathname);
-        var pythonProcessFinished = false;
         var searchKeyword = $("#searchKeyword").val();
         $(".error-div").addClass('hidden');
         if (searchKeyword === "") {
@@ -41,7 +39,6 @@ $(document).ready(function() {
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content') },
                     url: $('input[name=url]').val() + "crawlerData",
                     data: 'searchKeyword=' + JSON.stringify(searchKeywordData),
-                    async: true,
                     beforeSend: function() {
                         $('body').addClass('wating');
                         $('.loader').removeClass('hidden');
@@ -79,32 +76,17 @@ $(document).ready(function() {
                         var hoursDiff = Math.floor(minsDiff / 60);
                         minsDiff = minsDiff % 60;
 
-                        $(".error-message").removeClass('alert-danger').addClass('alert-success').html(
-                            "実施検索キーワード数：" + responseArray.SearchKeywordsNum + "</br>" +
-                            "検索項目数：" + responseArray.SearchItemsNum + "</br>" +
-                            "開始時：" + responseArray.StartDate + "</br>" +
-                            "終了時：" + responseArray.EndDate + "</br>"
-                        );
-                        $(".error-div").removeClass('hidden');
-                        pythonProcessFinished = true;
+                        // $(".error-message").removeClass('alert-danger').addClass('alert-success').html(
+                        //     "実施検索キーワード数：" + responseArray.SearchKeywordsNum + "</br>" +
+                        //     "開始時：" + responseArray.StartDate + "</br>" +
+                        //     "終了時：" + responseArray.EndDate + "</br>"
+                        // );
+                        // $(".error-div").removeClass('hidden');
                     } else {
                         $(".error-message").html("検索処理はエラーが発生しています。");
                         $(".error-div").removeClass('hidden');
-                        pythonProcessFinished = true;
                     }
                 });
-                while (!pythonProcessFinished) {
-                    $.ajax({
-                        url: url,
-                        type: 'HEAD',
-                        error: function() {
-                            $("#output").text("File doesn't exists");
-                        },
-                        success: function() {
-                            $("#output").text('File exists');
-                        }
-                    });
-                }
             }
         }
     });

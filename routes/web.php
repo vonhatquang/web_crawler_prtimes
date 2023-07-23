@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RedeliveriesController;
+use App\Http\Controllers\CrawlerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,6 @@ Route::redirect('/', 'login');
 // });
 
 Route::get('crawler', [CrawlerController::class, 'index'])->name('crawler');
-Route::post('/crawlerLog',[CrawlerProcessController::class,'getProcessLog'])->name('crawler.log');
-Route::post('/crawlerData',[CrawlerController::class,'crawlerProcess'])->name('crawler.process');
-
 Route::get('redeliveries', [RedeliveriesController::class, 'index'])->name('redeliveries');
 Route::post('list-redeliveries', [RedeliveriesController::class, 'listRedeliveries'])->name('redeliveries.list'); 
 Route::post('get-redeliveries', [RedeliveriesController::class, 'getRedeliveries'])->name('redeliveries.get'); 

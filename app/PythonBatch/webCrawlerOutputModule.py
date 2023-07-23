@@ -14,13 +14,13 @@ def OutputResultsToExcel(searchResultArray,searchResultFileName):
     # else:
     #     base_path = Path(__file__).parent
     #     file_path = (base_path / "../../public/crawler_file").resolve() + "/"
+#    print(file_path)
     templateFileName = "PRTIMES.xlsx"
     wb = openpyxl.load_workbook(str(file_path) + templateFileName)
     columns = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N"]
-    searchItemCounts = 0
+    keywordRow = 0
     
     for searchResultContent in searchResultArray:
-        searchItemCounts = searchItemCounts + int(searchResultContent["search_item_count"])
         sheet = wb.copy_worksheet(wb['PRTIMES'])
         sheet.title = searchResultContent["search_keywords"] 
         dataRow = len(list(sheet.rows))            
@@ -61,4 +61,3 @@ def OutputResultsToExcel(searchResultArray,searchResultFileName):
     searchResultFilePath = file_path + searchResultFileName
     wb.remove(wb['PRTIMES'])
     wb.save(searchResultFilePath)
-    print(searchItemCounts)
