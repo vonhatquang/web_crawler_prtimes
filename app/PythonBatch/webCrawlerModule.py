@@ -25,9 +25,12 @@ def crawlerDataURL(driver, content):
         for articleLink in articleLinks:
             prtimes_url = articleLink.get_attribute('href')
             recordRun = recordRun + 1
-            no = recordRun
-            
+            no = recordRun                
+            file = open(str(sys.argv[3]) + "processLog.txt","w")                      
+            file.write("「" + content + "」キーワードのURLを取得する： " + str(recordRun) + "/" + str(recordCount))               
+            file.close()
             searchResults.append({
+                'record_count':recordCount,
                 'no':no,
                 'industry':"",
                 'company_name':"",
@@ -45,8 +48,13 @@ def crawlerDataURL(driver, content):
             })             
     return searchResults
 
-def crawlerDataURLDetail(driver, searchResults):
+def crawlerDataURLDetail(driver, searchResults, content):
     for searchResult in searchResults:
+        recordRun = str(searchResult["no"])
+        recordCount = str(searchResult["record_count"])
+        file = open(str(sys.argv[3]) + "processLog.txt","w")                      
+        file.write("「" + content + "」キーワードの情報を取得する： " + str(recordRun) + "/" + str(recordCount)) 
+        file.close()        
         driver.get(str(searchResult["prtimes_url"]))
         article_title = webElementModule.getElementByCssSelector(driver,'h1.release--title').text
         release_date = webElementModule.getElementByCssSelector(driver,'time.time.icon-time-release-svn').text
@@ -116,7 +124,7 @@ def crawlerDataURLDetail(driver, searchResults):
 #Crawler Data Start
 def crawlerData(driver, content):
     searchResults = crawlerDataURL(driver, content)
-    searchResults = crawlerDataURLDetail(driver, searchResults)      
+    searchResults = crawlerDataURLDetail(driver, searchResults, content)      
     return searchResults
 
 def webCrawlerDataProcess():   
@@ -137,7 +145,10 @@ def webCrawlerDataProcess():
     limit = 10
     #Search Result Data Which will output to excel
     searchKeywordResultArray = []
-    #Loop Search Keyword
+    #Loop Search Keyword  
+    file = open(str(sys.argv[3]) + "processLog.txt","r+")
+    file.truncate(0)
+    file.close()   
     contentRun = 0
     for content in contents:
         if content != "":
@@ -157,10 +168,11 @@ def webCrawlerDataProcess():
 
 #            print("Search Keyword: " + str(contentRun))
             searchResults = []
-            searchResults = crawlerData(driver, content) 
+            searchResults = crawlerData(driver, content.replace("\n", "")) 
             if len(searchResults) > 0:
                 searchKeywordResultArray.append({
                     'search_keywords':content,
+                    'search_item_count':len(searchResults),
                     'search_results':searchResults
                 })
 #            endDateTime = datetime.datetime.now()
@@ -181,5 +193,8 @@ def webCrawlerDataProcess():
     #Crawler Data End
 
     #Close Web Browser
-    driver.quit()   
+    driver.quit() 
+    #file = open(str(sys.argv[2]) + "processLog.txt","r+")
+    #file.truncate(0)
+    #file.close()  
         

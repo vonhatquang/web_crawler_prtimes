@@ -12,10 +12,17 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="antialiased">
-    <div class="loader hidden">
-        <div class="loading">
-        </div>
+<body class="antialiased"> 
+    @csrf
+	<div class="loader hidden">
+		<div class="col-12"> 
+			<div class="row">
+				<div class="col-5"></div>
+				<div class="col-2 loading"></div>
+				<div class="col-5"></div>
+				<div class="col-12 processing" style="text-align:center;font-size:large;"></div>
+			</div>	
+		</div>
     </div>
 
     <div class="container keywords">
@@ -30,8 +37,10 @@
             </div> 
         </div> 
         <div class="row justify-content-center">
-            <div class="col-6">
+            <div class="col-6">			
                 <input type="hidden" name="url" value="<?php echo url()->current();?>/">
+                <input type="hidden" class="process-url" value="{{ route('crawler.process') }}">
+                <input type="hidden" class="processing-url" value="{{ route('crawler.processing') }}">
                 <input type="hidden" name="count" value="<?php echo config('app.limit_submit');?>"> 
                 <textarea class="form-control" id="searchKeyword" row="100" style="min-height:300px!important;max-height:300px!important"></textarea>
             </div> 
