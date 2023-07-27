@@ -34,20 +34,24 @@ $(document).ready(function() {
                     beforeSend: function() {
                         $('body').addClass('wating');
                         $('.loader').removeClass('hidden');
-						myInterval = setInterval(getProcessBarInfo, 100);
+                        $('.progress').removeClass('hidden');
+						myInterval = setInterval(getProcessBarInfo, 1000);
                     },
                     success: function(data) {
                         responseJson = data;
+						$('.progress').addClass('hidden');
 						clearInterval(myInterval);
                     },
                     error: function(err) {
                         // console.log('Error' + JSON.stringify(err, null, 2));
                         responseJson = "";
+						$('.progress').addClass('hidden');
 						clearInterval(myInterval);
                     }
                 }).done(function() {
                     $('body').removeClass('wating');
                     $('.loader').addClass('hidden');
+					$('.progress').addClass('hidden');
                     $(".download").empty();
 					clearInterval(myInterval);
                     if (responseJson !== "") {
@@ -114,7 +118,8 @@ $(document).ready(function() {
 			}
 		}).done(function() {
 			if (responseJson !== "") {
-				$(".processing").html(responseJson);
+				//$(".processing").html(responseJson);
+				$('#dynamic').html(responseJson);
 				//alert(responseJson);
 			}
 		});

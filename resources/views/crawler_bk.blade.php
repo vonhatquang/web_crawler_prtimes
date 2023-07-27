@@ -62,8 +62,8 @@
                 <input type="button" value="Webスクレイピング実行" id="crawler-btn" class="btn btn-primary">      
             </div> 
         </div>     
-        <div class="row justify-content-center download-div hidden">
-            <div class="col-6 container download" style="margin-top:10px !important; margin-left:400px !important">
+        <div class="row justify-content-left download-div hidden">
+            <div class="col-6 container download" style="margin-top:10px !important;">
             </div> 
         </div> 
     </div>   

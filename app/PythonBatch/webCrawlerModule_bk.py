@@ -48,7 +48,7 @@ def crawlerDataURL(driver, content):
                 'prtimes_url':prtimes_url,
                 'release_time':""
             })   
-            time.sleep(1)
+            time.sleep(2)
     return searchResults
 
 def crawlerDataURLDetail(driver, searchResults, content):
@@ -123,7 +123,7 @@ def crawlerDataURLDetail(driver, searchResults, content):
         searchResult['business_category']=business_category
         searchResult['kw_displayed_at_the_bottom_of_the_article']=kw_displayed_at_the_bottom_of_the_article
         searchResult['release_time']=release_time
-        time.sleep(1)
+        time.sleep(2)
     return searchResults
 #Crawler Data Start
 def crawlerData(driver, content):
