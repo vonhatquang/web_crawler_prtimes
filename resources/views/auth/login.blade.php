@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <!--  Title -->
-        <title>配送管理システム</title>
+        <title>情報収集(PRTIMES)システム</title>
         <!--  Required Meta Tag -->
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,7 +45,7 @@
                         <div class="col-xl-5 col-xxl-4">
                             <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
                                 <div class="col-sm-8 col-md-6 col-xl-9">
-                                    <h2 class="mb-3 fs-7 fw-bolder">配送管理システムへようこそ</h2>
+                                    <h2 class="mb-3 fs-7 fw-bolder">情報収集(PRTIMES)システムへようこそ</h2>
                                     <!-- <p class=" mb-9">Your Admin Dashboard</p>
                                     <div class="row">
                                         <div class="col-6 mb-2 mb-sm-0">
@@ -116,10 +116,10 @@
                                                 <a class="text-primary fw-medium" href="user-forgot-password"> パスワードをお忘れですか ?</a>
                                             </div> -->
                                             <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">ログイン</button>
-                                            <div class="d-flex align-items-center justify-content-center">
+                                            <!-- <div class="d-flex align-items-center justify-content-center">
                                                 <p class="fs-4 mb-0 fw-medium">&nbsp;</p>
                                                 <a class="text-primary fw-medium ms-2" href="{{ route('register') }}">アカウントを作成する</a>
-                                            </div>
+                                            </div> -->
                                         </form>
                                         <!-- <form method="POST" action="{{ route('login') }}">
                                             <div class="mb-3">
